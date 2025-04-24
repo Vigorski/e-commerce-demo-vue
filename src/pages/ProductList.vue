@@ -9,54 +9,31 @@
       <div
         class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
-        <div
-          v-for="product in products"
-          :key="product.id"
-          class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col overflow-hidden"
-        >
-          <div
-            class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden"
-          >
-            <img
-              v-if="product.image"
-              :src="product.image"
-              alt="Product image"
-              class="object-cover w-full h-full"
-              loading="lazy"
-            />
-            <div v-else class="text-gray-400">No image</div>
-          </div>
+        <template v-if="isLoading">
+          <SkeletonCard v-for="n in 3" :key="n" />
+        </template>
 
-          <div class="p-5 flex flex-col flex-grow">
-            <h2 class="text-lg font-semibold text-gray-800 truncate">
-              {{ product.title }}
-            </h2>
-            <p class="text-sm text-gray-600 line-clamp-2 mt-1">
-              {{ product.description }}
-            </p>
-            <div class="mt-auto flex items-center justify-between pt-4">
-              <span class="text-blue-600 font-bold text-lg">
-                ${{ product.price.toFixed(2) }}
-              </span>
-              <button
-                @click="addToCart(product)"
-                class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition"
-              >
-                Add to cart
-              </button>
-            </div>
-          </div>
-        </div>
+        <transition-group name="fade" tag="div" v-else class="contents">
+          <ProductCard
+            v-for="(product, index) in products"
+            :key="product.id"
+            :product="product"
+            :add-to-cart="addToCart"
+            :style="`animation-delay: ${index * 100}ms`"
+          ></ProductCard>
+        </transition-group>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { onMounted } from 'vue';
+  import { onMounted, ref } from 'vue';
   import { useCartStore } from '@/stores/cart';
-  import Navbar from '@/components/NavBar.vue';
   import { useProductStore } from '@/stores/products';
+  import Navbar from '@/components/NavBar.vue';
+  import ProductCard from '@/components/UI/ProductCard.vue';
+  import SkeletonCard from '@/components/UI/SkeletonCard.vue';
   import type { Product } from '@/customTypes/product';
   import { storeToRefs } from 'pinia';
 
@@ -64,6 +41,8 @@
   const { products } = storeToRefs(store);
   const { fetchProducts } = store;
   const { addItem } = useCartStore();
+
+  const isLoading = ref(true);
 
   const addToCart = (product: Product) => {
     addItem(product);
@@ -74,6 +53,8 @@
       await fetchProducts();
     } catch (error) {
       console.error('Failed to fetch products:', error);
+    } finally {
+      isLoading.value = false;
     }
   });
 </script>
