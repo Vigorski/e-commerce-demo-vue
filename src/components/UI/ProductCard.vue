@@ -1,5 +1,5 @@
 <template>
-  <BaseCard>
+  <BaseCard customClasses="hover:shadow-lg transition-shadow duration-300 flex flex-col overflow-hidden animate-fade-in">
     <div
       class="h-44 bg-gray-200 flex items-center justify-center overflow-hidden"
     >
@@ -24,12 +24,11 @@
         <span class="text-indigo-600 font-bold text-lg">
           ${{ product.price.toFixed(2) }}
         </span>
-        <button
-          @click="addToCart(product)"
-          class="bg-indigo-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition"
-        >
-          Add to cart
-        </button>
+				<BaseButton
+					customClasses="text-sm px-4 py-2"
+					:clickHandler="addToCart.bind(null, product)">
+					Add to cart
+				</BaseButton>
       </div>
     </div>
   </BaseCard>
@@ -37,6 +36,7 @@
 
 <script setup lang="ts">
   import BaseCard from '@/components/UI/BaseCard.vue';
+	import BaseButton from '@/components/UI/BaseButton.vue';
   import type { Product } from '@/customTypes/product';
 
   defineProps<{

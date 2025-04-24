@@ -1,7 +1,14 @@
 <template>
-  <div
-    class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col overflow-hidden animate-fade-in"
-  >
-    <slot></slot>
-  </div>
+	<div
+		class="bg-white rounded-lg shadow-md"
+		:class="customClasses">
+		<slot></slot>
+	</div>
 </template>
+
+<script setup lang="ts">
+import { defineProps } from 'vue';
+defineProps<{
+	customClasses?: string;
+}>();
+</script>

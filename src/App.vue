@@ -1,5 +1,9 @@
 <template>
-  <div class="max-w-5xl mx-auto">
-    <router-view />
-  </div>
+	<MasterLayout>
+		<router-view />
+	</MasterLayout>
 </template>
+
+<script setup lang="ts">
+	import MasterLayout from '@/components/layout/MasterLayout.vue';
+</script>
