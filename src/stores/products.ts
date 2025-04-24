@@ -1,12 +1,15 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { useFetch } from '../hooks/useFetch';
+import { useToast } from 'vue-toastification';
+import { useFetch } from '@/hooks/useFetch';
 import type { Product } from '@/customTypes/product';
 
 const firebaseUrl = import.meta.env.VITE_FIREBASE_REALTIME_DATABASE;
+const toast = useToast();
 
 export const useProductStore = defineStore('products', () => {
   const products = ref<Product[]>([]);
+  const errors = ref<{ [key: string]: Error }>();
 
   const fetchProducts = async () => {
     try {
@@ -19,6 +22,8 @@ export const useProductStore = defineStore('products', () => {
         id,
       }));
     } catch (error) {
+			errors.value = { ...errors.value, fetchProducts: error as Error };
+			toast.error('Failed to fetch products.');
       throw error;
     }
   };
@@ -33,10 +38,13 @@ export const useProductStore = defineStore('products', () => {
         }
       );
       products.value.push({ ...product, id: response.name });
+      toast.success('Product added successfully!');
     } catch (error) {
+      toast.error('Failed to add new product.');
+			errors.value = { ...errors.value, addProduct: error as Error };
       throw error;
     }
   };
 
-  return { products, fetchProducts, addProduct };
+  return { products, fetchProducts, addProduct, errors };
 });

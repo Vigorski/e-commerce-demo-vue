@@ -5,13 +5,13 @@
 
 	<BaseCard customClasses="shadow-lg p-8">
 		<form @submit.prevent="handleSubmit" class="space-y-6">
-			<BaseInput v-model="title" name="title" labelText="Product Title">
+			<BaseInput v-model.trim="title" name="title" labelText="Product Title">
 				<template #icon>
 					<DocumentTextIcon class="h-5 w-5 text-gray-400" />
 				</template>
 			</BaseInput>
 
-			<BaseTextarea v-model="description" name="description" labelText="Product Description">
+			<BaseTextarea v-model.trim="description" name="description" labelText="Product Description">
 				<template #icon>
 					<ChatBubbleLeftRightIcon class="h-5 w-5 text-gray-400" />
 				</template>
@@ -23,13 +23,13 @@
 				</template>
 			</BaseInput>
 
-			<BaseInput v-model="image" name="image" labelText="Image URL">
+			<BaseInput v-model.trim="image" name="image" labelText="Image URL">
 				<template #icon>
 					<PhotoIcon class="h-5 w-5 text-gray-400" />
 				</template>
 			</BaseInput>
 
-			<BaseButton mode="submit" customClasses="w-full py-3 px-4">
+			<BaseButton mode="submit" customClasses="w-full">
 				Add New Product
 			</BaseButton>
 		</form>
@@ -38,6 +38,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useProductStore } from '@/stores/products';
 import BaseCard from '@/components/UI/BaseCard.vue';
 import BaseButton from '@/components/UI/BaseButton.vue';
@@ -50,10 +51,11 @@ import {
 	PhotoIcon,
 } from '@heroicons/vue/24/outline';
 
+const router = useRouter();
 const { addProduct } = useProductStore();
 const title = ref('');
 const description = ref('');
-const price = ref<number | null>(null);
+const price = ref('');
 const image = ref('');
 
 const handleSubmit = async () => {
@@ -66,14 +68,16 @@ const handleSubmit = async () => {
 		await addProduct({
 			title: title.value,
 			description: description.value,
-			price: price.value,
+			price: Number(price.value),
 			image: image.value,
 		});
 
 		title.value = '';
 		description.value = '';
-		price.value = null;
+		price.value = '';
 		image.value = '';
+
+		router.push({ name: 'ProductList' });
 	} catch (error) {
 		console.error('Failed to add new product:', error);
 	}

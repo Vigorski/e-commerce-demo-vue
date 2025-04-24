@@ -1,5 +1,8 @@
 <template>
   <BaseCard customClasses="hover:shadow-lg transition-shadow duration-300 flex flex-col overflow-hidden animate-fade-in">
+		<SaleBadge v-if="product.isOnSale">
+			On Sale
+		</SaleBadge>
     <div
       class="h-44 bg-gray-200 flex items-center justify-center overflow-hidden"
     >
@@ -21,9 +24,14 @@
         {{ product.description }}
       </p>
       <div class="mt-auto flex items-center justify-between pt-4">
-        <span class="text-indigo-600 font-bold text-lg">
-          ${{ product.price.toFixed(2) }}
-        </span>
+				<div class="flex flex-col">
+					<span :class="product.isOnSale ? 'line-through text-gray-300' : 'font-bold text-indigo-600 text-lg'">
+						${{ product.price.toFixed(2) }}
+					</span>
+					<span v-if="product.isOnSale" class="font-bold text-lg text-rose-500">
+						${{ product.salePrice?.toFixed(2) }}
+					</span>
+				</div>
 				<BaseButton
 					customClasses="text-sm px-4 py-2"
 					:clickHandler="addToCart.bind(null, product)">
@@ -38,6 +46,7 @@
   import BaseCard from '@/components/UI/BaseCard.vue';
 	import BaseButton from '@/components/UI/BaseButton.vue';
   import type { Product } from '@/customTypes/product';
+	import SaleBadge from './SaleBadge.vue';
 
   defineProps<{
     product: Product;

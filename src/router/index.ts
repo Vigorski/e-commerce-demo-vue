@@ -4,7 +4,7 @@ import TheCart from '@/pages/TheCart.vue';
 import AddProduct from '@/pages/AddProduct.vue';
 
 const routes = [
-  { path: '/', name: 'Home', component: ProductList },
+  { path: '/', name: 'ProductList', component: ProductList },
   { path: '/cart', name: 'Cart', component: TheCart },
   { path: '/add-product', name: 'AddProduct', component: AddProduct },
 ];

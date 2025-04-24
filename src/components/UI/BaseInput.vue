@@ -11,7 +11,7 @@
 				:id="name"
 				:type="mode ?? 'text'"
 				:value="modelValue"
-				@input="$emit('update:modelValue', $event.target.value)"
+        @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
 				:disabled="disabled"
 				:placeholder="placeholder ?? labelText"
 				:step="mode === 'number' ? step : undefined"
