@@ -17,7 +17,7 @@ export const useProductStore = defineStore('products', () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await useFetch<{ [key: string]: Product }, Product>(
+      const response = await useFetch<{ [key: string]: Product }>(
         `${firebaseUrl}/products.json`
       );
 

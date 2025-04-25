@@ -4,7 +4,7 @@ type optionsType<TBody> = {
   body?: TBody;
 };
 
-export async function useFetch<TResponse, TBody>(
+export async function useFetch<TResponse, TBody = undefined>(
   url: string,
   options?: optionsType<TBody>
 ): Promise<TResponse> {
