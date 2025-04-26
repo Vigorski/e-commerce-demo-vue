@@ -1,35 +1,64 @@
 import type { CartItem } from '@/customTypes/cart';
+import type { Product } from '@/customTypes/product';
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 export const useCartStore = defineStore('cart', () => {
-  const items = ref<CartItem[]>([]);
+  const cartItems = ref<CartItem[]>([]);
 
-  const total = computed(() =>
-    items.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const loadCart = () => {
+    const storedCart = localStorage.getItem('cart');
+
+    if (storedCart) {
+      cartItems.value = JSON.parse(storedCart);
+    }
+  };
+
+  const saveCart = () => {
+    localStorage.setItem('cart', JSON.stringify(cartItems.value));
+  };
+
+  const totalPrice = computed(() =>
+    cartItems.value.reduce(
+      (sum, item) => sum + (item.salePrice ?? item.price) * item.quantity,
+      0
+    )
   );
 
   const itemCount = computed(() =>
-    items.value.reduce((sum, item) => sum + item.quantity, 0)
+    cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
   );
 
-  const addItem = (product: Omit<CartItem, 'quantity'>) => {
-    const existing = items.value.find((item) => item.id === product.id);
-    if (existing) existing.quantity += 1;
-    else items.value.push({ ...product, quantity: 1 });
+  const addItem = (product: Product) => {
+    const existing = cartItems.value.find((item) => item.id === product.id);
+
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cartItems.value.push({ ...product, quantity: 1 });
+    }
+    toast.success('Cart updated!');
   };
 
-  const removeItem = (id: string) => {
-    items.value = items.value.filter((i) => i.id !== id);
+  const removeItem = (productId: string) => {
+    cartItems.value = cartItems.value.filter((item) => item.id !== productId);
   };
 
   const clearCart = () => {
-    items.value = [];
+    cartItems.value = [];
+    toast.info('Cart cleared.');
   };
 
+  watch(cartItems, saveCart, { deep: true });
+
+  loadCart();
+
   return {
-    items,
-    total,
+    cartItems,
+    totalPrice,
     itemCount,
     addItem,
     removeItem,

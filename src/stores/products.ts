@@ -2,7 +2,11 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useToast } from 'vue-toastification';
 import { useFetch } from '@/hooks/useFetch';
-import { ProductSortBy, type Product } from '@/customTypes/product';
+import {
+  ProductSortBy,
+  type NewProduct,
+  type Product,
+} from '@/customTypes/product';
 
 const firebaseUrl = import.meta.env.VITE_FIREBASE_REALTIME_DATABASE;
 const toast = useToast();
@@ -62,9 +66,9 @@ export const useProductStore = defineStore('products', () => {
     return result;
   });
 
-  const addProduct = async (product: Product) => {
+  const addProduct = async (product: NewProduct) => {
     try {
-      const response = await useFetch<{ name: string }, Product>(
+      const response = await useFetch<{ name: string }, NewProduct>(
         `${firebaseUrl}/products.json`,
         {
           method: 'POST',

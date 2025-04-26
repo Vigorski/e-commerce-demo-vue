@@ -15,22 +15,25 @@
   const props = defineProps<{
     customClasses?: string;
     mode?: 'button' | 'submit';
-    outlined?: boolean;
+    btnStyle?: 'filled' | 'outlined' | 'link';
     disabled?: boolean;
     clickHandler?: () => void;
   }>();
 
   const buttonClasses = computed(() => {
     const base = 'px-4 py-3 rounded-md';
-    const filled = 'bg-indigo-600 text-white hover:bg-blue-700';
-    const outline =
-      'font-semibold border border-indigo-600 text-indigo-600 hover:bg-indigo-50';
-    const disabledStyles = 'opacity-50 cursor-not-allowed';
+    const btnStyle = {
+      filled: 'bg-indigo-600 text-white hover:bg-blue-700',
+      outlined:
+        'font-semibold border border-indigo-600 text-indigo-600 hover:bg-indigo-50',
+      link: 'bg-transparent',
+      disabled: 'opacity-50 cursor-not-allowed',
+    };
 
     return [
       base,
-      props.outlined ? outline : filled,
-      props.disabled ? disabledStyles : '',
+      props.btnStyle ? btnStyle[props.btnStyle] : btnStyle.filled,
+      props.disabled ? btnStyle.disabled : '',
       props.customClasses || '',
     ].join(' ');
   });

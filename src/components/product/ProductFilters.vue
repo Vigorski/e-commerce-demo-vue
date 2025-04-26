@@ -22,10 +22,10 @@
 </template>
 
 <script setup lang="ts">
-  import BaseCheckbox from '@/components/UI/formUI/BaseCheckbox.vue';
-  import BaseSelect from '@/components/UI/formUI/BaseSelect.vue';
+  import BaseCheckbox from '@/components/form/BaseCheckbox.vue';
+  import BaseSelect from '@/components/form/BaseSelect.vue';
   import { ProductSortBy } from '@/customTypes/product';
-  import BaseCard from './UI/formUI/BaseCard.vue';
+  import BaseCard from '@/components/UI/BaseCard.vue';
   import { useProductStore } from '@/stores/products';
   import { storeToRefs } from 'pinia';
 

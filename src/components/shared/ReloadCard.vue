@@ -6,7 +6,11 @@
     <p class="text-sm mb-4">
       Please check your internet connection and/or try reloading.
     </p>
-    <BaseButton @click="reloadHandler" outlined customClasses="w-full mt-4">
+    <BaseButton
+      @click="reloadHandler"
+      btnStyle="outlined"
+      customClasses="w-full mt-4"
+    >
       Reload
     </BaseButton>
   </div>
@@ -14,7 +18,7 @@
 
 <script setup lang="ts">
   import { defineProps } from 'vue';
-  import BaseButton from '@/components/UI/formUI/BaseButton.vue';
+  import BaseButton from '@/components/form/BaseButton.vue';
 
   defineProps<{
     title: string;

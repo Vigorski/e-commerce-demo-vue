@@ -1,5 +1,4 @@
-export interface Product {
-  id?: string;
+export interface NewProduct {
   title: string;
   description: string;
   price: number;
@@ -7,6 +6,10 @@ export interface Product {
   image?: string;
   isOnSale?: boolean;
   salePrice?: number;
+}
+
+export interface Product extends NewProduct {
+  id: string;
 }
 
 export enum ProductSortBy {
