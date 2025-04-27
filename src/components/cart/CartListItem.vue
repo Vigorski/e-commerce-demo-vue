@@ -4,11 +4,18 @@
       :to="`/product-details/${cartItem.id}`"
       class="flex items-center gap-4"
     >
-      <img
-        :src="cartItem.image"
-        alt="Product image"
-        class="w-20 h-20 object-cover rounded-md"
-      />
+      <div
+        class="w-20 h-20 rounded-md bg-gray-200 flex items-center justify-center overflow-hidden"
+      >
+        <img
+          v-if="cartItem.image"
+          :src="cartItem.image"
+          alt="Product image"
+          class="object-cover w-full h-full"
+          loading="lazy"
+        />
+        <div v-else class="text-gray-400">No image</div>
+      </div>
       <div>
         <h2 class="text-lg font-semibold text-gray-800">
           {{ cartItem.title }}
