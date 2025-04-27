@@ -33,7 +33,9 @@ export const useProductStore = defineStore('products', () => {
         }));
     } catch (error) {
       errors.value = { ...errors.value, fetchProducts: error as Error };
-      toast.error('Failed to fetch products.');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to fetch products.'
+      );
       throw error;
     }
   };
@@ -68,17 +70,24 @@ export const useProductStore = defineStore('products', () => {
 
   const addProduct = async (product: NewProduct) => {
     try {
-      const response = await useFetch<{ name: string }, NewProduct>(
-        `${firebaseUrl}/products.json`,
-        {
-          method: 'POST',
-          body: product,
-        }
-      );
+      const response = await useFetch<
+        { name: string; error?: string },
+        NewProduct
+      >(`${firebaseUrl}/products.json`, {
+        method: 'POST',
+        body: product,
+      });
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
       products.value.push({ ...product, id: response.name });
       toast.success('Product added successfully!');
     } catch (error) {
-      toast.error('Failed to add new product.');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to add new product.'
+      );
       errors.value = { ...errors.value, addProduct: error as Error };
       throw error;
     }
