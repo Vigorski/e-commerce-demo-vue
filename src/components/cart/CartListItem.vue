@@ -18,15 +18,13 @@
         </p>
       </div>
     </router-link>
-    <div class="text-right flex flex-col justify-between">
-      <p class="font-bold text-gray-800">
-        ${{ (cartItem.price * cartItem.quantity).toFixed(2) }}
-      </p>
+    <div class="text-right flex flex-col justify-between items-end">
+      <DiscountPrice :product="cartItem" priceFontSize="text-md" />
 
       <BaseButton
         btnStyle="link"
         :clickHandler="removeItemHandler"
-        customClasses="pl-0 pr-0 text-sm flex items-center text-md text-red-500 hover:underline"
+        customClasses="pl-0 pr-0 text-sm flex items-center text-md hover:underline"
       >
         <TrashIcon class="h-4 w-4 mr-2" />
         <span>Remove</span>
@@ -39,6 +37,7 @@
   import type { CartItem } from '@/customTypes/cart';
   import { TrashIcon } from '@heroicons/vue/24/outline';
   import BaseButton from '@/components/form/BaseButton.vue';
+  import DiscountPrice from '@/components/shared/DiscountPrice.vue';
 
   defineProps<{
     cartItem: CartItem;

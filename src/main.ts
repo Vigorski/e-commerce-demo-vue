@@ -11,7 +11,7 @@ import 'vue-toastification/dist/index.css';
 const options: PluginOptions = {
   timeout: 3000,
   closeOnClick: false,
-  pauseOnHover: true,
+  pauseOnHover: false,
 };
 
 const app = createApp(App);

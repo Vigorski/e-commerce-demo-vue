@@ -23,20 +23,28 @@ export const useCartStore = defineStore('cart', () => {
 
   const totalPrice = computed(() =>
     cartItems.value.reduce(
-      (sum, item) => sum + (item.salePrice ?? item.price) * item.quantity,
+      (sum, item) =>
+        sum + (item.salePrice ?? item.price) * (item.quantity ?? 1),
+      0
+    )
+  );
+
+  const subtotalPrice = computed(() =>
+    cartItems.value.reduce(
+      (sum, item) => sum + item.price * (item.quantity ?? 1),
       0
     )
   );
 
   const itemCount = computed(() =>
-    cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
+    cartItems.value.reduce((sum, item) => sum + (item.quantity ?? 1), 0)
   );
 
   const addItem = (product: Product) => {
     const existing = cartItems.value.find((item) => item.id === product.id);
 
-    if (existing) {
-      existing.quantity += 1;
+    if (existing && existing.quantity) {
+      existing.quantity++;
     } else {
       cartItems.value.push({ ...product, quantity: 1 });
     }
@@ -59,6 +67,7 @@ export const useCartStore = defineStore('cart', () => {
   return {
     cartItems,
     totalPrice,
+    subtotalPrice,
     itemCount,
     addItem,
     removeItem,

@@ -8,7 +8,7 @@ export function useFetchItemById<T>() {
   const product = ref<T>();
   const isLoading = ref(false);
   const error = ref<Error | null>(null);
-	const toast = useToast();
+  const toast = useToast();
 
   const fetchItemById = async (path: string, id: string) => {
     isLoading.value = true;
@@ -19,7 +19,7 @@ export function useFetchItemById<T>() {
 
       if (!result) throw new Error(`Item from ${path} not found`);
 
-      product.value = result;
+      product.value = { ...result, id };
     } catch (err) {
       error.value = err as Error;
       toast.error(`Failed to fetch item from ${path}.`);

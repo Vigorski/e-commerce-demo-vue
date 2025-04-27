@@ -7,28 +7,28 @@
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-5 gap-14">
-      <BaseCard
-        customClasses="shadow-lg p-8 h-fit sticky top-6 md:col-span-3 space-y-6"
-      >
+      <div class="p-8 h-fit md:col-span-3 space-y-6">
         <template v-for="item in cartItems" :key="item.id">
           <CartListItem
             :cartItem="item"
             :removeItemHandler="removeItem.bind(null, item.id)"
           />
         </template>
-      </BaseCard>
+      </div>
       <BaseCard customClasses="shadow-lg p-8 h-fit md:col-span-2 sticky top-6">
         <h2 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h2>
 
         <div class="space-y-4">
           <div class="flex justify-between text-gray-700">
             <span>Subtotal</span>
-            <span>${{ totalPrice.toFixed(2) }}</span>
+            <span>${{ subtotalPrice.toFixed(2) }}</span>
           </div>
 
           <div class="flex justify-between text-gray-700">
             <span>Amount Saved</span>
-            <span class="text-green-600">- $0.00</span>
+            <span class="text-green-600">
+              - ${{ (subtotalPrice - totalPrice).toFixed() }}
+            </span>
           </div>
 
           <div
@@ -64,6 +64,6 @@
   import { storeToRefs } from 'pinia';
 
   const store = useCartStore();
-  const { cartItems, totalPrice } = storeToRefs(store);
+  const { cartItems, totalPrice, subtotalPrice } = storeToRefs(store);
   const { removeItem, clearCart } = store;
 </script>
