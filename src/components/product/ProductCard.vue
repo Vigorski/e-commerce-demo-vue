@@ -3,7 +3,9 @@
     customClasses="hover:shadow-lg transition-shadow duration-300 flex flex-col overflow-hidden"
   >
     <SaleBadge v-if="product.isOnSale" />
-    <router-link :to="`/product-details/${product.id}`">
+    <router-link
+      :to="{ name: 'ProductDetails', params: { productId: product.id } }"
+    >
       <div
         class="h-44 bg-gray-200 flex items-center justify-center overflow-hidden"
       >

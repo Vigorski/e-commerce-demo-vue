@@ -7,6 +7,7 @@ import {
   type NewProduct,
   type Product,
 } from '@/customTypes/product';
+import { getErrorMessage } from '@/utilities/errorMessage';
 
 const firebaseUrl = import.meta.env.VITE_FIREBASE_REALTIME_DATABASE;
 const toast = useToast();
@@ -33,9 +34,7 @@ export const useProductStore = defineStore('products', () => {
         }));
     } catch (error) {
       errors.value = { ...errors.value, fetchProducts: error as Error };
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to fetch products.'
-      );
+      toast.error(getErrorMessage(error, 'Failed to fetch products.'));
       throw error;
     }
   };
@@ -85,9 +84,7 @@ export const useProductStore = defineStore('products', () => {
       products.value.push({ ...product, id: response.name });
       toast.success('Product added successfully!');
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to add new product.'
-      );
+      toast.error(getErrorMessage(error, 'Failed to add new product.'));
       errors.value = { ...errors.value, addProduct: error as Error };
       throw error;
     }

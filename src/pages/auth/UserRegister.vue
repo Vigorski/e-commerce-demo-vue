@@ -1,8 +1,8 @@
 <template>
   <section class="max-w-md mx-auto p-6">
-    <h1 class="text-3xl font-bold text-center mb-8">Login</h1>
+    <h1 class="text-3xl font-bold text-center mb-8">Register</h1>
 
-    <form @submit.prevent="handleLogin" class="space-y-6">
+    <form @submit.prevent="handleRegister" class="space-y-6">
       <input
         v-model="email"
         type="email"
@@ -18,14 +18,7 @@
         required
       />
 
-      <BaseButton mode="submit" customClasses="w-full">Login</BaseButton>
-      <p class="text-center uppercase text-gray-400 py-2">or</p>
-      <router-link
-        :to="{ name: 'UserRegister' }"
-        class="px-4 py-3 rounded-md w-full block text-center font-semibold border border-indigo-600 text-indigo-600 hover:bg-indigo-50"
-      >
-        Register
-      </router-link>
+      <BaseButton mode="submit" customClasses="w-full">Register</BaseButton>
 
       <div v-if="error" class="text-red-500 text-sm mt-2">
         {{ error }}
@@ -46,11 +39,11 @@
   const email = ref('');
   const password = ref('');
 
-  const { login, error } = authStore;
+  const { register, error } = authStore;
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     try {
-      await login(email.value, password.value);
+      await register(email.value, password.value);
       router.push({ name: 'ProductList' });
     } catch (err) {
       console.error(err);

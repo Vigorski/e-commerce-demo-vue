@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-between border-b pb-4">
     <router-link
-      :to="`/product-details/${cartItem.id}`"
+      :to="{ name: 'ProductDetails', params: { productId: cartItem.id } }"
       class="flex items-center gap-4"
     >
       <div
