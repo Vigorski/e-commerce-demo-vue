@@ -84,6 +84,7 @@
   } from '@heroicons/vue/24/outline';
   import type { NewProduct } from '@/customTypes/product';
   import PageTitle from '@/components/UI/PageTitle.vue';
+  import { routeName } from '@/router/routes';
 
   const router = useRouter();
   const { addProduct } = useProductStore();
@@ -123,7 +124,7 @@
       isOnSale.value = false;
       salePrice.value = '';
 
-      router.push({ name: 'ProductList' });
+      router.push({ name: routeName.PRODUCT_LIST });
     } catch (error) {
       console.error('Failed to add new product:', error);
     }

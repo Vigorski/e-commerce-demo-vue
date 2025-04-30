@@ -9,39 +9,31 @@ import {
   type User,
 } from 'firebase/auth';
 import { useToast } from 'vue-toastification';
-// import { isSessionExpired } from '@/utilities/isSessionExpired';
+import { isSessionExpired } from '@/utilities/isSessionExpired';
 import { getErrorMessage } from '@/utilities/errorMessage';
 
 const toast = useToast();
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(auth.currentUser);
+  const lastLoginAt = ref<number | undefined>(undefined);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  const isLoggedIn = computed(() => {
-    return user.value !== null;
-  });
-
   const isAuthenticated = computed(() => {
-    // const sessionExpired = isSessionExpired();
-    return true;
-  });
+    if (!!lastLoginAt.value) {
+      return !isSessionExpired(lastLoginAt.value);
+    }
 
-  console.log(user.value);
+    return false;
+  });
 
   const register = async (email: string, password: string) => {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      user.value = userCredential.user;
+      await createUserWithEmailAndPassword(auth, email, password);
     } catch (err) {
       const errorMessage = getErrorMessage(err, 'Registration failed!');
       error.value = errorMessage;
@@ -57,13 +49,7 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null;
 
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      user.value = userCredential.user;
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       const errorMessage = getErrorMessage(err, 'Login failed!');
       error.value = errorMessage;
@@ -77,7 +63,6 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = async () => {
     try {
       await signOut(auth);
-      user.value = null;
     } catch (err) {
       const errorMessage = getErrorMessage(
         err,
@@ -88,31 +73,32 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-    console.log(firebaseUser);
-    user.value = firebaseUser;
-  });
-
   const authStateReady = new Promise<void>((resolve) => {
-    onAuthStateChanged(auth, (firebaseUser) => {
+    onAuthStateChanged(auth, async (firebaseUser) => {
       user.value = firebaseUser;
+
+      if (firebaseUser) {
+        const idTokenResult = await firebaseUser?.getIdTokenResult();
+        lastLoginAt.value = new Date(idTokenResult.authTime).getTime();
+      } else {
+        lastLoginAt.value = undefined;
+      }
+
       resolve();
     });
   });
 
-  onUnmounted(() => {
-    unsubscribe();
-  });
+  onUnmounted(() => authStateReady);
 
   return {
     user,
     isLoading,
     error,
+    authStateReady,
+    isAuthenticated,
+    lastLoginAt,
     register,
     login,
     logout,
-    authStateReady,
-    isLoggedIn,
-    isAuthenticated,
   };
 });

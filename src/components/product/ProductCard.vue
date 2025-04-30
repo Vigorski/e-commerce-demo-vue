@@ -4,7 +4,10 @@
   >
     <SaleBadge v-if="product.isOnSale" />
     <router-link
-      :to="{ name: 'ProductDetails', params: { productId: product.id } }"
+      :to="{
+        name: routeName.PRODUCT_DETAILS,
+        params: { productId: product.id },
+      }"
     >
       <div
         class="h-44 bg-gray-200 flex items-center justify-center overflow-hidden"
@@ -46,6 +49,7 @@
   import SaleBadge from '@/components/UI/SaleBadge.vue';
   import type { Product } from '@/customTypes/product';
   import DiscountPrice from '@/components/shared/DiscountPrice.vue';
+  import { routeName } from '@/router/routes';
 
   defineProps<{
     product: Product;

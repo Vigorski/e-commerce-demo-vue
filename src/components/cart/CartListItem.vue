@@ -1,7 +1,10 @@
 <template>
   <div class="flex justify-between border-b pb-4">
     <router-link
-      :to="{ name: 'ProductDetails', params: { productId: cartItem.id } }"
+      :to="{
+        name: routeName.PRODUCT_DETAILS,
+        params: { productId: cartItem.id },
+      }"
       class="flex items-center gap-4"
     >
       <div
@@ -45,6 +48,7 @@
   import { TrashIcon } from '@heroicons/vue/24/outline';
   import BaseButton from '@/components/form/BaseButton.vue';
   import DiscountPrice from '@/components/shared/DiscountPrice.vue';
+  import { routeName } from '@/router/routes';
 
   defineProps<{
     cartItem: CartItem;
