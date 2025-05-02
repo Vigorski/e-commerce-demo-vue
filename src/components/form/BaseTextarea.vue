@@ -3,7 +3,7 @@
     <label
       :for="name"
       class="text-gray-700 font-semibold"
-      :class="labelClasses"
+      :class="[labelClasses, error ? 'text-rose-500' : '']"
     >
       {{ labelText }}
     </label>
@@ -27,9 +27,10 @@
         :rows="rows ?? 3"
         :disabled="disabled"
         class="border p-3 pl-12 w-full rounded-md text-gray-700 resize-none flex-1"
-        :class="inputClasses"
+        :class="[inputClasses, error ? 'border-rose-500' : '']"
       ></textarea>
     </div>
+    <p v-if="error" class="text-rose-500 text-sm mt-2">{{ error }}</p>
   </div>
 </template>
 
@@ -43,6 +44,7 @@
     disabled?: boolean;
     inputClasses?: string;
     labelClasses?: string;
+    error?: string;
   }>();
 
   defineEmits(['update:modelValue']);

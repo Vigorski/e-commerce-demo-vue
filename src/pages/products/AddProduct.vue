@@ -4,16 +4,22 @@
 
     <BaseCard customClasses="shadow-lg p-8 max-w-2xl mx-auto">
       <form @submit.prevent="handleSubmit" class="space-y-6">
-        <BaseInput v-model.trim="title" name="title" labelText="Product Title">
+        <BaseInput
+          v-model.trim="title.val"
+          name="title"
+          labelText="Product Title"
+          :error="title.error"
+        >
           <template #icon>
             <DocumentTextIcon class="h-5 w-5 text-gray-400" />
           </template>
         </BaseInput>
 
         <BaseTextarea
-          v-model.trim="description"
+          v-model.trim="description.val"
           name="description"
           labelText="Product Description"
+          :error="description.error"
         >
           <template #icon>
             <ChatBubbleLeftRightIcon class="h-5 w-5 text-gray-400" />
@@ -35,12 +41,13 @@
         </div>
         <div class="grid grid-cols-1 content-center sm:grid-cols-2 gap-4">
           <BaseInput
-            v-model="price"
+            v-model="price.val"
             name="price"
             labelText="Product Price"
             mode="number"
             step=".01"
             min="0"
+            :error="price.error"
           >
             <template #icon>
               <CurrencyDollarIcon class="h-5 w-5 text-gray-400" />
@@ -85,26 +92,24 @@
   import type { NewProduct } from '@/customTypes/product';
   import PageTitle from '@/components/UI/PageTitle.vue';
   import { routeName } from '@/router/routes';
+  import { useAddProductFields } from '@/hooks/useAddProductFields';
 
   const router = useRouter();
   const { addProduct } = useProductStore();
-  const title = ref('');
-  const description = ref('');
-  const price = ref('');
+  const { fields, validateForm } = useAddProductFields();
+
+  const { title, description, price } = fields;
   const image = ref('');
   const isOnSale = ref(false);
   const salePrice = ref('');
 
   const handleSubmit = async () => {
-    if (!title.value || !description.value || !price.value) {
-      console.error('Input validation failed!');
-      return;
-    }
+    if (!validateForm()) return;
 
     const newProduct: NewProduct = {
-      title: title.value,
-      description: description.value,
-      price: Number(price.value),
+      title: title.val,
+      description: description.val,
+      price: Number(price.val),
       image: image.value,
       isOnSale: isOnSale.value,
       createdAt: Date.now(),
@@ -117,9 +122,9 @@
     try {
       await addProduct(newProduct);
 
-      title.value = '';
-      description.value = '';
-      price.value = '';
+      title.val = '';
+      description.val = '';
+      price.val = '';
       image.value = '';
       isOnSale.value = false;
       salePrice.value = '';

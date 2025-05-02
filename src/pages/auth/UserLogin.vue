@@ -59,7 +59,6 @@
   const { fields, validateForm } = useLoginFields();
 
   const { email, password } = fields;
-
   const { login, error } = authStore;
 
   const handleLogin = async () => {

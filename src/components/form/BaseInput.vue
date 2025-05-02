@@ -24,7 +24,6 @@
         :disabled="disabled"
         :placeholder="placeholder ?? labelText"
         :step="mode === 'number' ? step : undefined"
-        :min="mode === 'number' ? min : undefined"
         class="border p-3 pl-12 w-full rounded-md text-gray-700"
         :class="[inputClasses, error ? 'border-rose-500' : '']"
       />
@@ -44,7 +43,6 @@
     mode?: 'text' | 'number' | 'password';
     disabled?: boolean;
     step?: string;
-    min?: string;
     error?: string;
   }>();
 
