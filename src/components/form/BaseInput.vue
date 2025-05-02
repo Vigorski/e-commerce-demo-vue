@@ -3,7 +3,7 @@
     <label
       :for="name"
       class="text-gray-700 font-semibold"
-      :class="labelClasses"
+      :class="[labelClasses, error ? 'text-rose-500' : '']"
     >
       {{ labelText }}
     </label>
@@ -26,9 +26,10 @@
         :step="mode === 'number' ? step : undefined"
         :min="mode === 'number' ? min : undefined"
         class="border p-3 pl-12 w-full rounded-md text-gray-700"
-        :class="inputClasses"
+        :class="[inputClasses, error ? 'border-rose-500' : '']"
       />
     </div>
+    <p v-if="error" class="text-rose-500 text-sm mt-2">{{ error }}</p>
   </div>
 </template>
 
@@ -40,10 +41,11 @@
     inputClasses?: string;
     labelClasses?: string;
     placeholder?: string;
-    mode?: 'text' | 'number';
+    mode?: 'text' | 'number' | 'password';
     disabled?: boolean;
     step?: string;
     min?: string;
+    error?: string;
   }>();
 
   defineEmits(['update:modelValue']);

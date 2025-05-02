@@ -7,6 +7,7 @@ import {
   signOut,
   onAuthStateChanged,
   type User,
+  updateProfile,
 } from 'firebase/auth';
 import { useToast } from 'vue-toastification';
 import { isSessionExpired } from '@/utilities/isSessionExpired';
@@ -28,12 +29,25 @@ export const useAuthStore = defineStore('auth', () => {
     return false;
   });
 
-  const register = async (email: string, password: string) => {
+  const register = async (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => {
     isLoading.value = true;
     error.value = null;
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await updateProfile(userCredential.user, {
+        displayName: `${firstName} ${lastName}`,
+      });
     } catch (err) {
       const errorMessage = getErrorMessage(err, 'Registration failed!');
       error.value = errorMessage;

@@ -72,7 +72,9 @@
   import BaseButton from '@/components/form/BaseButton.vue';
   import { useRoute, useRouter } from 'vue-router';
   import { routeName } from '@/router/routes';
+  import { useToast } from 'vue-toastification';
 
+  const toast = useToast();
   const route = useRoute();
   const router = useRouter();
   const cart = useCartStore();
@@ -88,6 +90,7 @@
   async function handleLogout() {
     await logout();
     showMenu.value = false;
+    toast.info('User logged out.');
 
     if (route.meta.requiresAuth) {
       router.push({ name: routeName.PRODUCT_LIST });
