@@ -39,7 +39,9 @@
           </div>
 
           <div class="mt-6 space-y-4">
-            <BaseButton customClasses="w-full">Checkout</BaseButton>
+            <BaseButton :clickHandler="handleCheckout" customClasses="w-full">
+              Checkout
+            </BaseButton>
 
             <BaseButton
               customClasses="w-full border-rose-500 text-rose-500 font-semibold"
@@ -62,8 +64,14 @@
   import BaseCard from '@/components/UI/BaseCard.vue';
   import CartListItem from '@/components/cart/CartListItem.vue';
   import { storeToRefs } from 'pinia';
+  import { useToast } from 'vue-toastification';
 
+  const toast = useToast();
   const store = useCartStore();
   const { cartItems, totalPrice, subtotalPrice } = storeToRefs(store);
   const { removeItem, clearCart } = store;
+
+  const handleCheckout = () => {
+    toast.info('Thank you for using this demo!');
+  };
 </script>

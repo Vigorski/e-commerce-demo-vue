@@ -1,11 +1,3 @@
-import ProductList from '@/pages/products/ProductList.vue';
-import TheCart from '@/pages/cart/TheCart.vue';
-import AddProduct from '@/pages/products/AddProduct.vue';
-import NotFound from '@/pages/NotFound.vue';
-import ProductDetails from '@/pages/products/ProductDetails.vue';
-import UserLogin from '@/pages/auth/UserLogin.vue';
-import UserRegister from '@/pages/auth/UserRegister.vue';
-
 export enum routeName {
   ADD_PRODUCT = 'AddProduct',
   PRODUCT_LIST = 'ProductList',
@@ -30,31 +22,39 @@ export const routes = [
   {
     path: routePath.PRODUCT_LIST,
     name: routeName.PRODUCT_LIST,
-    component: ProductList,
+    component: () => import('@/pages/products/ProductList.vue'),
   },
-  { path: routePath.CART, name: routeName.CART, component: TheCart },
+  {
+    path: routePath.CART,
+    name: routeName.CART,
+    component: () => import('@/pages/cart/TheCart.vue'),
+  },
   {
     path: routePath.ADD_PRODUCT,
     name: routeName.ADD_PRODUCT,
-    component: AddProduct,
+    component: () => import('@/pages/products/AddProduct.vue'),
     meta: { requiresAuth: true },
   },
   {
     path: routePath.PRODUCT_DETAILS,
     name: routeName.PRODUCT_DETAILS,
-    component: ProductDetails,
+    component: () => import('@/pages/products/ProductDetails.vue'),
   },
   {
     path: routePath.LOGIN,
     name: routeName.LOGIN,
-    component: UserLogin,
+    component: () => import('@/pages/auth/UserLogin.vue'),
     meta: { isAuth: true },
   },
   {
     path: routePath.REGISTER,
     name: routeName.REGISTER,
-    component: UserRegister,
+    component: () => import('@/pages/auth/UserRegister.vue'),
     meta: { isAuth: true },
   },
-  { path: routePath.NOT_FOUND, name: routeName.NOT_FOUND, component: NotFound },
+  {
+    path: routePath.NOT_FOUND,
+    name: routeName.NOT_FOUND,
+    component: () => import('@/pages/NotFound.vue'),
+  },
 ];
