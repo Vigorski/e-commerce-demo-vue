@@ -8,14 +8,27 @@
 
     <div v-else class="grid grid-cols-1 md:grid-cols-5 gap-14">
       <div class="p-8 h-fit md:col-span-3 space-y-6">
-        <template v-for="item in cartItems" :key="item.id">
+        <template v-for="(item, index) in cartItems" :key="item.id">
           <CartListItem
             :cartItem="item"
             :removeItemHandler="removeItem.bind(null, item.id)"
+            v-motion
+            :initial="{ opacity: 0, y: 20 }"
+            :enter="{ opacity: 1, y: 0 }"
+            :leave="{ opacity: 0, y: -20 }"
+            :delay="index * 100"
+            :duration="300"
           />
         </template>
       </div>
-      <BaseCard customClasses="shadow-lg p-8 h-fit md:col-span-2 sticky top-6">
+      <BaseCard
+        customClasses="shadow-lg p-8 h-fit md:col-span-2 sticky top-6"
+        v-motion
+        :initial="{ opacity: 0, x: 30 }"
+        :enter="{ opacity: 1, x: 0 }"
+        :duration="300"
+        :delay="500"
+      >
         <h2 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h2>
 
         <div class="space-y-4">
