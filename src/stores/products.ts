@@ -8,6 +8,7 @@ import {
   type Product,
 } from '@/customTypes/product';
 import { getErrorMessage } from '@/utilities/errorMessage';
+import { useAuthStore } from './auth';
 
 const firebaseUrl = import.meta.env.VITE_FIREBASE_REALTIME_DATABASE;
 const toast = useToast();
@@ -69,10 +70,12 @@ export const useProductStore = defineStore('products', () => {
 
   const addProduct = async (product: NewProduct) => {
     try {
+      const authStore = useAuthStore();
+      const token = await authStore.getToken();
       const response = await useFetch<
         { name: string; error?: string },
         NewProduct
-      >(`${firebaseUrl}/products.json`, {
+      >(`${firebaseUrl}/products.json?auth=${token}`, {
         method: 'POST',
         body: product,
       });

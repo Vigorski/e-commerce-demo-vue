@@ -29,6 +29,10 @@ export const useAuthStore = defineStore('auth', () => {
     return false;
   });
 
+  const getToken = async () => {
+    return await auth?.currentUser?.getIdToken();
+  };
+
   const register = async (
     email: string,
     password: string,
@@ -114,5 +118,6 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     login,
     logout,
+    getToken,
   };
 });
