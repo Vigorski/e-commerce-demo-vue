@@ -12,6 +12,7 @@
 
     <div class="flex items-center gap-6 text-gray-700">
       <router-link
+        v-if="isAuthenticated"
         :to="{ name: routeName.ADD_PRODUCT }"
         class="flex items-center gap-1 hover:text-cyan-600"
       >
@@ -26,74 +27,24 @@
         <span>Cart ({{ cart.itemCount }})</span>
       </router-link>
 
-      <div class="relative">
-        <button
-          @click="toggleMenu"
-          class="flex items-center gap-2 hover:text-cyan-600"
-        >
-          <UserCircleIcon class="w-6 h-6 text-cyan-600" />
-        </button>
-
-        <div
-          v-if="showMenu"
-          class="absolute right-0 mt-2 w-40 bg-white border rounded shadow-md"
-        >
-          <BaseButton
-            v-if="user"
-            :clickHandler="handleLogout"
-            class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-          >
-            Logout
-          </BaseButton>
-          <router-link
-            v-else
-            :to="{ name: routeName.LOGIN }"
-            class="hover:text-cyan-600"
-          >
-            Login
-          </router-link>
-        </div>
-      </div>
+      <UserMenu />
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
   import { storeToRefs } from 'pinia';
-  import { ref } from 'vue';
   import { useCartStore } from '@/stores/cart';
   import { useAuthStore } from '@/stores/auth';
   import {
     ShoppingCartIcon,
     ShoppingBagIcon,
     PlusCircleIcon,
-    UserCircleIcon,
   } from '@heroicons/vue/24/outline';
-  import BaseButton from '@/components/form/BaseButton.vue';
-  import { useRoute, useRouter } from 'vue-router';
   import { routeName } from '@/router/routes';
-  import { useToast } from 'vue-toastification';
+  import UserMenu from '../user/UserMenu.vue';
 
-  const toast = useToast();
-  const route = useRoute();
-  const router = useRouter();
   const cart = useCartStore();
   const authStore = useAuthStore();
-  const { user } = storeToRefs(authStore);
-  const { logout } = authStore;
-  const showMenu = ref(false);
-
-  function toggleMenu() {
-    showMenu.value = !showMenu.value;
-  }
-
-  async function handleLogout() {
-    await logout();
-    showMenu.value = false;
-    toast.info('User logged out.');
-
-    if (route.meta.requiresAuth) {
-      router.push({ name: routeName.PRODUCT_LIST });
-    }
-  }
+  const { isAuthenticated } = storeToRefs(authStore);
 </script>
